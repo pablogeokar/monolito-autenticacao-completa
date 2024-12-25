@@ -5,6 +5,7 @@ import cors from "@fastify/cors";
 import { config } from "./modules/config/app.config";
 import connectDatabase from "./modules/database/database";
 import { errorHandler } from "./modules/middlewares/errorHandler";
+import { asyncHandler } from "./modules/middlewares/asyncHandler";
 
 const fastify = Fastify({
   logger: config.NODE_ENV === "development" && true,
@@ -22,9 +23,12 @@ const start = async () => {
     fastify.setErrorHandler(errorHandler);
 
     // Routes
-    fastify.post("/", async (request: FastifyRequest, reply: FastifyReply) => {
-      return { message: "Hello" };
-    });
+    fastify.get(
+      "/",
+      asyncHandler(async (req: FastifyRequest, res: FastifyReply) => {
+        res.send({ message: "Hello" });
+      })
+    );
 
     // Connect to database
     await connectDatabase();
