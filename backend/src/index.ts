@@ -6,6 +6,9 @@ import { config } from "./modules/config/app.config";
 import connectDatabase from "./modules/database/database";
 import { errorHandler } from "./modules/middlewares/errorHandler";
 import { asyncHandler } from "./modules/middlewares/asyncHandler";
+import authRoutes from "./modules/auth/auth.routes";
+
+const BASE_PATH = config.BASE_PATH;
 
 const fastify = Fastify({
   logger: config.NODE_ENV === "development" && true,
@@ -21,6 +24,9 @@ const start = async () => {
     });
     // Register the error handler
     fastify.setErrorHandler(errorHandler);
+
+    // Register auth routes with prefix
+    await fastify.register(authRoutes, { prefix: `${BASE_PATH}/auth` });
 
     // Routes
     fastify.get(
