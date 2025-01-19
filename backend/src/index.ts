@@ -7,6 +7,7 @@ import connectDatabase from "./modules/database/database";
 import { errorHandler } from "./modules/middlewares/errorHandler";
 import { asyncHandler } from "./modules/middlewares/asyncHandler";
 import authRoutes from "./modules/auth/auth.routes";
+import { HTTPSTATUS } from "./modules/config/http.config";
 
 const BASE_PATH = config.BASE_PATH;
 
@@ -32,7 +33,7 @@ const start = async () => {
     fastify.get(
       "/",
       asyncHandler(async (req: FastifyRequest, res: FastifyReply) => {
-        res.send({ message: "Hello" });
+        res.status(HTTPSTATUS.OK).send({ message: "Hello" });
       })
     );
 
@@ -42,7 +43,7 @@ const start = async () => {
     // Start server
     await fastify.listen({ port: Number(config.PORT) });
     console.log(
-      `\u2705 Server listening on port ${config.PORT} in ${config.NODE_ENV}`
+      `\u2705  Server listening on port ${config.PORT} in ${config.NODE_ENV} \u{1F310}`
     );
   } catch (err) {
     fastify.log.error(err);
