@@ -17,13 +17,13 @@ export class AuthController {
       const userAgent = req.headers["user-agent"];
       const body = registerSchema.parse({
         ...(req.body as Record<string, unknown>),
-        userAgent,
       });
 
-      this.authService.register(body);
+      const { user } = await this.authService.register(body);
 
       return res.status(HTTPSTATUS.CREATED).send({
         message: "User registered succesfully",
+        data: user,
       });
     }
   );
