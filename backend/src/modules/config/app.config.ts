@@ -25,7 +25,7 @@ const appConfig = (): AppConfig => ({
   JWT: {
     SECRET: getEnv("JWT_SECRET"),
     EXPIRES_IN: getEnv("JWT_EXPIRES_IN", "1h"),
-    REFRESH_SECRET: getEnv("JWT_REFRESH_SECRET"),
+    REFRESH_SECRET: getEnv("JWT_REFRESH_TOKEN"),
     REFRESH_EXPIRES_IN: getEnv("JWT_REFRESH_EXPIRES_IN"),
   },
 });

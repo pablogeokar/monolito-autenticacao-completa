@@ -23,6 +23,7 @@ const start = async () => {
       origin: config.APP_ORIGIN,
       credentials: true,
     });
+
     // Register the error handler
     fastify.setErrorHandler(errorHandler);
 
