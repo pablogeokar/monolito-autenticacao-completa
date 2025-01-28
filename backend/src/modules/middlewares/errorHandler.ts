@@ -31,9 +31,7 @@ export const errorHandler = (
 ) => {
   console.error(`Error occurred on PATH: ${request.url}`, error);
 
-  const urlGetPath = getPath(request);
-
-  if (urlGetPath === REFRESH_PATH) {
+  if (getPath(request) === REFRESH_PATH) {
     clearAuthenticationCookies(reply);
   }
 

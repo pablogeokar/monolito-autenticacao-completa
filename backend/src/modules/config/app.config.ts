@@ -1,4 +1,5 @@
 import { getEnv } from "../common/utils/get-env";
+//import type { StringValue } from "jsonwebtoken";
 
 interface JWTConfig {
   SECRET: string;
@@ -24,9 +25,9 @@ const appConfig = (): AppConfig => ({
   MONGO_URI: getEnv("MONGO_URI"),
   JWT: {
     SECRET: getEnv("JWT_SECRET"),
-    EXPIRES_IN: getEnv("JWT_EXPIRES_IN", "1h"),
+    EXPIRES_IN: getEnv("JWT_EXPIRES_IN", "15m"),
     REFRESH_SECRET: getEnv("JWT_REFRESH_TOKEN"),
-    REFRESH_EXPIRES_IN: getEnv("JWT_REFRESH_EXPIRES_IN"),
+    REFRESH_EXPIRES_IN: getEnv("JWT_REFRESH_EXPIRES_IN", "30d"),
   },
 });
 

@@ -6,7 +6,11 @@ import {
   loginSchema,
   registerSchema,
 } from "../common/validators/auth.validator";
-import { setAuthenticationCookies } from "../common/utils/cookie";
+import {
+  getAccessTokenCookieOptions,
+  getRefreshTokenCookieOptions,
+  setAuthenticationCookies,
+} from "../common/utils/cookie";
 import { UnauthorizedException } from "../common/utils/catch-errors";
 
 export class AuthController {
@@ -59,10 +63,26 @@ export class AuthController {
     async (req: FastifyRequest, res: FastifyReply): Promise<any> => {
       const refreshToken = req.cookies.refreshToken as string | undefined;
       if (!refreshToken) {
-        throw new UnauthorizedException("User not authorized");
+        throw new UnauthorizedException("Missing refresh token");
       }
 
-      await this.authService.refreshToken(refreshToken);
+      const { accessToken, newRefreshToken } =
+        await this.authService.refreshToken(refreshToken);
+
+      if (newRefreshToken) {
+        res.setCookie(
+          "refreshToken",
+          newRefreshToken,
+          getRefreshTokenCookieOptions()
+        );
+
+        return res
+          .status(HTTPSTATUS.OK)
+          .setCookie("accessToken", accessToken, getAccessTokenCookieOptions())
+          .send({
+            message: "Refresh access token successfuly",
+          });
+      }
     }
   );
 }
