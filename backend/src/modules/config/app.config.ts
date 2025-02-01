@@ -15,6 +15,8 @@ interface AppConfig {
   BASE_PATH: string;
   MONGO_URI: string;
   JWT: JWTConfig;
+  RESEND_API_KEY: string;
+  MAILER_SENDER: string;
 }
 
 const appConfig = (): AppConfig => ({
@@ -29,6 +31,8 @@ const appConfig = (): AppConfig => ({
     REFRESH_SECRET: getEnv("JWT_REFRESH_TOKEN"),
     REFRESH_EXPIRES_IN: getEnv("JWT_REFRESH_EXPIRES_IN", "30d"),
   },
+  RESEND_API_KEY: getEnv("RESEND_API_KEY"),
+  MAILER_SENDER: getEnv("MAILER_SENDER"),
 });
 
 export const config = appConfig();
