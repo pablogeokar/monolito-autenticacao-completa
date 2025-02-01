@@ -1,5 +1,6 @@
 import mongoose, { type Document, Schema } from "mongoose";
 import { compareValue, hashValue } from "../../common/utils/bcrypt";
+import { boolean } from "zod";
 
 interface UserPreferences {
   enable2FA: boolean;
@@ -29,6 +30,7 @@ const userSchema = new Schema<UserDocument>(
     name: { type: String, required: true },
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
+    isEmailVerified: { type: Boolean, default: false },
     userPreferences: { type: userPreferencesSchema, default: {} },
   },
   { timestamps: true, toJSON: {} }

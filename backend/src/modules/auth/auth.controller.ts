@@ -5,6 +5,7 @@ import { HTTPSTATUS } from "../config/http.config";
 import {
   loginSchema,
   registerSchema,
+  verificationEmailSchema,
 } from "../common/validators/auth.validator";
 import {
   getAccessTokenCookieOptions,
@@ -83,6 +84,18 @@ export class AuthController {
             message: "Refresh access token successfuly",
           });
       }
+    }
+  );
+
+  public verifyEmail = asyncHandler(
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    async (req: FastifyRequest, res: FastifyReply): Promise<any> => {
+      const { code } = verificationEmailSchema.parse(req.body);
+      await this.authService.verifyEmail(code);
+
+      return res
+        .status(HTTPSTATUS.OK)
+        .send({ message: "Email verified successfully" });
     }
   );
 }
