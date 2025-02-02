@@ -40,9 +40,10 @@ export class InternalServerException extends AppError {
 
 export class HttpException extends AppError {
   constructor(
+    // biome-ignore lint/style/useDefaultParameterLast: <explanation>
+    message = "Http Exception Error",
     statusCode: HttpStatusCode,
-    errorCode?: ErrorCode,
-    message = "Http Exception Error"
+    errorCode?: ErrorCode
   ) {
     super(message, statusCode, errorCode);
   }

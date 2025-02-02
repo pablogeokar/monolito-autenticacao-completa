@@ -3,6 +3,7 @@ import { asyncHandler } from "../middlewares/asyncHandler";
 import type { AuthService } from "./auth.service";
 import { HTTPSTATUS } from "../config/http.config";
 import {
+  emailSchema,
   loginSchema,
   registerSchema,
   verificationEmailSchema,
@@ -24,7 +25,6 @@ export class AuthController {
   public register = asyncHandler(
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     async (req: FastifyRequest, res: FastifyReply): Promise<any> => {
-      const userAgent = req.headers["user-agent"];
       const body = registerSchema.parse({
         ...(req.body as Record<string, unknown>),
       });
@@ -96,6 +96,18 @@ export class AuthController {
       return res
         .status(HTTPSTATUS.OK)
         .send({ message: "Email verified successfully" });
+    }
+  );
+
+  public forgotPassword = asyncHandler(
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    async (req: FastifyRequest, res: FastifyReply): Promise<any> => {
+      const email = emailSchema.parse((req.body as { email: string }).email);
+      await this.authService.forgotPassword(email);
+
+      return res.status(HTTPSTATUS.OK).send({
+        message: "Password reset email sent",
+      });
     }
   );
 }

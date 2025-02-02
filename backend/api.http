@@ -17,7 +17,15 @@ POST http://localhost:8000/api/v1/auth/verify/email
 Content-Type: application/json
 
  {
-    "code": "3ccbe6c0da8249448e847f5ce"
+   "code": "3ccbe6c0da8249448e847f5ce"
+ }
+
+###
+POST http://localhost:8000/api/v1/auth/password/forgot
+Content-Type: application/json
+
+ {
+   "email": "pablogeokar@hotmail.com"
  }
 
 ###
