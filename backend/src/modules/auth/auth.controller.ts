@@ -100,8 +100,7 @@ export class AuthController {
   );
 
   public forgotPassword = asyncHandler(
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    async (req: FastifyRequest, res: FastifyReply): Promise<any> => {
+    async (req: FastifyRequest, res: FastifyReply) => {
       const email = emailSchema.parse((req.body as { email: string }).email);
       await this.authService.forgotPassword(email);
 

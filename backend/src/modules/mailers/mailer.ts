@@ -21,11 +21,20 @@ export const sendEmail = async ({
   text,
   html,
 }: Params) => {
-  await resend.emails.send({
-    to: Array.isArray(to) ? to : [to],
-    from,
-    text,
-    subject,
-    html,
-  });
+  try {
+    // Envia o e-mail usando a API do Resend
+    const response = await resend.emails.send({
+      to: Array.isArray(to) ? to : [to],
+      from,
+      subject,
+      text,
+      html,
+    });
+
+    // Retorna o ID do e-mail enviado
+    return { data: { id: response.data?.id }, error: null };
+  } catch (error) {
+    // Captura e retorna o erro
+    return { data: null, error: error as Error };
+  }
 };
