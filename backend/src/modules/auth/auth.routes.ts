@@ -6,6 +6,7 @@ async function authRoutes(fastify: FastifyInstance) {
   fastify.post("/login", authController.login);
   fastify.post("/verify/email", authController.verifyEmail);
   fastify.post("/password/forgot", authController.forgotPassword);
+  fastify.post("/password/reset", authController.resetPassword);
   fastify.get("/refresh", authController.refreshToken);
 }
 

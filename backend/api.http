@@ -1,7 +1,8 @@
+### TEST
 GET http://localhost:8000
 
 
-###
+### USER REGISTER
 POST http://localhost:8000/api/v1/auth/register
 Content-Type: application/json
 
@@ -12,7 +13,7 @@ Content-Type: application/json
     "confirmPassword": "123456"
  }
 
-###
+### VERIFY EMAIL
 POST http://localhost:8000/api/v1/auth/verify/email
 Content-Type: application/json
 
@@ -20,7 +21,7 @@ Content-Type: application/json
    "code": "3ccbe6c0da8249448e847f5ce"
  }
 
-###
+### FORGOT PASSWORD
 POST http://localhost:8000/api/v1/auth/password/forgot
 Content-Type: application/json
 
@@ -28,14 +29,25 @@ Content-Type: application/json
    "email": "pablogeokar@hotmail.com"
  }
 
-###
+
+
+### LOGIN
 POST http://localhost:8000/api/v1/auth/login
 Content-Type: application/json
 
 {
-    "email": "pablogeokar@gmail.com",
+    "email": "pablogeokar@hotmail.com",
     "password": "123456"
 }
 
-###
+### RESET PASSWORD
+POST http://localhost:8000/api/v1/auth/password/reset
+Content-Type: application/json
+
+ {
+   "password": "123456",
+   "verificationCode": "43f3e6fb486c4f6d8fef5de00"
+ }
+
+### TOKEN REFRESH
 GET http://localhost:8000/api/v1/auth/refresh
