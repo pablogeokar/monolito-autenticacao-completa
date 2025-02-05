@@ -1,0 +1,16 @@
+services:
+  mongodb:
+    image: mongo:8.0
+    container_name: mongodb
+    #restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data-pg:/data/db
+
+volumes:
+  mongodb_data:
+    driver: local
