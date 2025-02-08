@@ -19,6 +19,7 @@ import Logo from "@/components/logo";
 import { useMutation } from "@tanstack/react-query";
 import { registerMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
+import FormInput from "@/components/FormInput";
 
 export default function SignUp() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -129,6 +130,7 @@ export default function SignUp() {
                       </FormItem>
                     )}
                   />
+                  {/* <FormInput form={form} label="Email" name="email" /> */}
                 </div>
                 <div className="mb-4">
                   <FormField
