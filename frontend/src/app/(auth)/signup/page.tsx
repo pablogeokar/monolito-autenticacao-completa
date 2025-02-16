@@ -111,7 +111,7 @@ export default function SignUp() {
                   />
                 </div>
                 <div className="mb-4">
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
@@ -129,8 +129,8 @@ export default function SignUp() {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
-                  {/* <FormInput form={form} label="Email" name="email" /> */}
+                  /> */}
+                  <FormInput form={form} label="Email" name="email" />
                 </div>
                 <div className="mb-4">
                   <FormField
