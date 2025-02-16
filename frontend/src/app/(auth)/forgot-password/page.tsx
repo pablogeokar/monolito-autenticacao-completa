@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import ForgotPassword from "./_forgotpassword";
 
-function ForgoPasswordPage() {
+function ForgotPasswordPage() {
   return (
     <Suspense>
       <ForgotPassword />
@@ -9,4 +9,4 @@ function ForgoPasswordPage() {
   );
 }
 
-export default ForgoPasswordPage;
+export default ForgotPasswordPage;

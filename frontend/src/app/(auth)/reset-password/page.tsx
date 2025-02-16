@@ -1,7 +1,12 @@
-import React from "react";
+import React, { Suspense } from "react";
+import ResetPassword from "./_resetpassword";
 
-function page() {
-  return <div>page</div>;
+function ResetPasswordPage() {
+  return (
+    <Suspense>
+      <ResetPassword />
+    </Suspense>
+  );
 }
 
-export default page;
+export default ResetPasswordPage;
