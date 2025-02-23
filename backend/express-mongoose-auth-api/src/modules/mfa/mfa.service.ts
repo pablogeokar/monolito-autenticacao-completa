@@ -1,4 +1,4 @@
-import { Request } from "express";
+import type { Request } from "express";
 import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 import UserModel from "../../database/models/user.model";
@@ -132,6 +132,7 @@ export class MfaService {
     }
 
     const isValid = speakeasy.totp.verify({
+      // biome-ignore lint/style/noNonNullAssertion: <explanation>
       secret: user.userPreferences.twoFactorSecret!,
       encoding: "base32",
       token: code,

@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { asyncHandler } from "../../middlewares/asyncHandler";
-import { MfaService } from "./mfa.service";
+import type { MfaService } from "./mfa.service";
 import { HTTPSTATUS } from "../../config/http.config";
 import {
   verifyMfaForLoginSchema,
