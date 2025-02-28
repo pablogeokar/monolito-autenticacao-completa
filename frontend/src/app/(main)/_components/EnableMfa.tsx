@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { z } from "zod";
-import { Copy } from "lucide-react";
+import { Check, Copy, Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,13 +28,35 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/context/auth-provider";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  mfaSetupQueryFn,
+  verifyEmailMutationFn,
+  verifyMFAMutationFn,
+  type MfaType,
+} from "@/lib/api";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "@/hooks/use-toast";
 
 const EnableMfa = () => {
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
   const [isOpen, setIsOpen] = useState(false);
   const [showKey, setShowKey] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["mfa-setup"],
+    queryFn: mfaSetupQueryFn,
+    enabled: isOpen,
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: verifyMFAMutationFn,
+  });
+
+  const mfaData = data ?? ({} as MfaType);
 
   const FormSchema = z.object({
     pin: z.string().min(6, {
@@ -49,7 +71,39 @@ const EnableMfa = () => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {}
+  function onSubmit(values: z.infer<typeof FormSchema>) {
+    const data = {
+      code: values.pin,
+      secretKey: mfaData.secret,
+    };
+
+    mutate(data, {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      onSuccess: (response: any) => {
+        queryClient.invalidateQueries({
+          queryKey: ["authUser"],
+        });
+        setIsOpen(false);
+        toast({
+          title: "Success",
+          description: response?.message,
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    });
+  }
+
+  const onCopy = useCallback((value: string) => {
+    navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
+  }, []);
 
   return (
     <div className="via-root to-root rounded-xl bg-gradient-to-r p-0.5">
@@ -75,9 +129,11 @@ const EnableMfa = () => {
             Revoke Access
           </Button>
         ) : (
-          <Dialog>
+          <Dialog modal open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button className="h-[35px] text-white">Enable MFA</Button>
+              <Button disabled={isLoading} className="h-[35px] text-white">
+                Enable MFA
+              </Button>
             </DialogTrigger>
             <DialogContent className="!gap-0">
               <DialogHeader>
@@ -112,14 +168,19 @@ const EnableMfa = () => {
                 </span>
               </div>
               <div className="mt-4 flex flex-row items-center gap-4">
-                <div className="rounded-md border p-2  border-[#0009321f] dark:border-gray-600 bg-white">
-                  <img
-                    alt="QR code"
-                    decoding="async"
-                    width="160"
-                    height="160"
-                    className="rounded-md"
-                  />
+                <div className="shrink-0 rounded-md border p-2  border-[#0009321f] dark:border-gray-600 bg-white">
+                  {isLoading || !mfaData?.qrImageUrl ? (
+                    <Skeleton className="w-[160px] h-[160px]" />
+                  ) : (
+                    <img
+                      alt="QR code"
+                      decoding="async"
+                      src={mfaData.qrImageUrl}
+                      width="160"
+                      height="160"
+                      className="rounded-md"
+                    />
+                  )}
                 </div>
 
                 {showKey ? (
@@ -129,12 +190,20 @@ const EnableMfa = () => {
                               text-sm text-[#0007149f] dark:text-muted-foreground font-normal"
                     >
                       <span>Copy setup key</span>
-                      <button type="button">
-                        <Copy size="20px" />
+                      <button
+                        type="button"
+                        disabled={copied}
+                        onClick={() => onCopy(mfaData.secret)}
+                      >
+                        {copied ? (
+                          <Check className="w-4 h4" />
+                        ) : (
+                          <Copy className="w-4 h4" />
+                        )}
                       </button>
                     </div>
                     <p className="text-sm block truncate w-[200px] text-black dark:text-muted-foreground">
-                      MNUDARRWNNGTAJKHKR4XK6CUKRGTAKLTGBAHGOJUJESUER2HHJJA
+                      {mfaData.secret}
                     </p>
                   </div>
                 ) : (
@@ -210,7 +279,10 @@ const EnableMfa = () => {
                         </FormItem>
                       )}
                     />
-                    <Button className="w-full h-[40px]">Verify</Button>
+                    <Button disabled={isPending} className="w-full h-[40px]">
+                      {isPending && <Loader className="animate-spin" />}
+                      Verify
+                    </Button>
                   </form>
                 </Form>
               </div>

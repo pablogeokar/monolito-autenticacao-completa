@@ -12,7 +12,7 @@ type RegisterType = {
   confirmPassword: string;
 };
 
-type MfaType = {
+export type MfaType = {
   message: string;
   secret: string;
   qrImageUrl: string;
