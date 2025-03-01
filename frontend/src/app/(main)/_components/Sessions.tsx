@@ -24,8 +24,6 @@ const Sessions = () => {
     (session) => session.isCurrent === undefined
   );
 
-  console.log(otherSessions);
-
   const handleDelete = useCallback(
     (id: string) => {
       mutate(id, {
