@@ -21,7 +21,9 @@ export const parseUserAgent = (
 
   const deviceType = result.device.type || "Desktop";
   const browser = result.browser.name || "Web";
-  const os = `${result.os.name} ${result.os.version}`;
+  const os = result.os.version
+    ? `${result.os.name} ${result.os.version}`
+    : result.os.name;
   const icon = deviceType === "mobile" ? Smartphone : Laptop;
 
   const formattedAt = isPast(new Date(createdAt))

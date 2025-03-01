@@ -66,6 +66,8 @@ export const mfaSetupQueryFn = async () => {
   return response.data;
 };
 
+export const logoutMutationFn = async () => await API.post("/auth/logout");
+
 export const verifyMFALoginMutationFn = async (data: MFALoginType) =>
   await API.post("/mfa/verify-login", data);
 
