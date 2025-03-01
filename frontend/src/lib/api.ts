@@ -28,6 +28,20 @@ type MFALoginType = {
   email: string;
 };
 
+type SessionType = {
+  _id: string;
+  userId: string;
+  userAgent: string;
+  createdAt: string;
+  expiresAt: string;
+  isCurrent: boolean;
+};
+
+type SessionResponseType = {
+  message: string;
+  sessions: SessionType[];
+};
+
 type ForgotPasswordType = { email: string };
 type VerifyEmailType = { code: string };
 type ResetPasswordType = { password: string; verificationCode: string };
@@ -47,8 +61,6 @@ export const forgotPasswordMutationFn = async (data: ForgotPasswordType) =>
 export const resetPasswordMutationFn = async (data: ResetPasswordType) =>
   await API.post("/auth/password/reset", data);
 
-export const getUserSessionQueryFn = async () => await API.get("/session/");
-
 export const mfaSetupQueryFn = async () => {
   const response = await API.get<MfaType>("/mfa/setup/");
   return response.data;
@@ -61,3 +73,13 @@ export const verifyMFAMutationFn = async (data: VerifyMFAType) =>
   await API.post("/mfa/verify", data);
 
 export const revokeMFAMutationFn = async () => await API.put("/mfa/revoke");
+
+export const getUserSessionQueryFn = async () => await API.get("/session/");
+
+export const sessionQueryFn = async () => {
+  const response = await API.get<SessionResponseType>("/session/all/");
+  return response.data;
+};
+
+export const sessionDeleteMutationFn = async (id: string) =>
+  await API.delete(`/session/${id}`);
