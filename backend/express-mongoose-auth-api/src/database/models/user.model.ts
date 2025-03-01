@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { type Document, Schema } from "mongoose";
 import { compareValue, hashValue } from "../../common/utils/bcrypt";
 
 interface UserPreferences {
@@ -64,8 +64,10 @@ userSchema.methods.comparePassword = async function (value: string) {
 };
 
 userSchema.set("toJSON", {
-  transform: function (doc, ret) {
+  transform: (doc, ret) => {
+    // biome-ignore lint/performance/noDelete: <explanation>
     delete ret.password;
+    // biome-ignore lint/performance/noDelete: <explanation>
     delete ret.userPreferences.twoFactorSecret;
     return ret;
   },
