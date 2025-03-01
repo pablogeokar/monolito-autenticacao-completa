@@ -23,6 +23,11 @@ type VerifyMFAType = {
   secretKey: string;
 };
 
+type MFALoginType = {
+  code: string;
+  email: string;
+};
+
 type ForgotPasswordType = { email: string };
 type VerifyEmailType = { code: string };
 type ResetPasswordType = { password: string; verificationCode: string };
@@ -49,5 +54,10 @@ export const mfaSetupQueryFn = async () => {
   return response.data;
 };
 
+export const verifyMFALoginMutationFn = async (data: MFALoginType) =>
+  await API.post("/mfa/verify-login", data);
+
 export const verifyMFAMutationFn = async (data: VerifyMFAType) =>
   await API.post("/mfa/verify", data);
+
+export const revokeMFAMutationFn = async () => await API.put("/mfa/revoke");

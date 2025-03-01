@@ -37,10 +37,11 @@ import {
 } from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/hooks/use-toast";
+import RevokeMfa from "../_common/RevokeMfa";
 
 const EnableMfa = () => {
   const queryClient = useQueryClient();
-  const { user } = useAuthContext();
+  const { user, refetch } = useAuthContext();
   const [isOpen, setIsOpen] = useState(false);
   const [showKey, setShowKey] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -125,9 +126,7 @@ const EnableMfa = () => {
           Protect your account by adding an extra layer of security.
         </p>
         {user?.userPreferences.enable2FA ? (
-          <Button className="h-[35px] text-[#c40006d3] bg-red-100 shadow-none mr-1">
-            Revoke Access
-          </Button>
+          <RevokeMfa />
         ) : (
           <Dialog modal open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
