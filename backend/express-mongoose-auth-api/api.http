@@ -40,6 +40,9 @@ Content-Type: application/json
     "password": "123456"
 }
 
+### LOGOUT
+POST http://localhost:8000/api/v1/auth/logout
+
 ### RESET PASSWORD
 POST http://localhost:8000/api/v1/auth/password/reset
 Content-Type: application/json
