@@ -29,19 +29,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/context/auth-provider";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  mfaSetupQueryFn,
-  verifyEmailMutationFn,
-  verifyMFAMutationFn,
-  type MfaType,
-} from "@/lib/api";
+import { mfaSetupQueryFn, verifyMFAMutationFn, type MfaType } from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/hooks/use-toast";
 import RevokeMfa from "../_common/RevokeMfa";
 
 const EnableMfa = () => {
   const queryClient = useQueryClient();
-  const { user, refetch } = useAuthContext();
+  const { user } = useAuthContext();
   const [isOpen, setIsOpen] = useState(false);
   const [showKey, setShowKey] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -101,9 +96,28 @@ const EnableMfa = () => {
   }
 
   const onCopy = useCallback((value: string) => {
-    navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1000);
+    if (typeof window === "undefined" || !navigator?.clipboard?.writeText) {
+      toast({
+        title: "Error",
+        description: "Clipboard API is not supported",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    navigator.clipboard
+      .writeText(value)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1000);
+      })
+      .catch(() => {
+        toast({
+          title: "Error",
+          description: "Failed to copy to clipboard",
+          variant: "destructive",
+        });
+      });
   }, []);
 
   return (
