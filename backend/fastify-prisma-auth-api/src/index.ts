@@ -32,13 +32,15 @@ const start = async () => {
       fastify.log.level = "warn";
     }
 
-    // Define uma rota básica
-    fastify.get("/", async () => {
-      return { hello: "world" };
-    });
-
     // Registra todas as rotas automaticamente
     await registerRoutes(fastify);
+
+    // Exibe todas as rotas registradas
+    fastify.ready(() => {
+      console.log("\nRotas registradas:");
+      const routes = fastify.printRoutes();
+      console.log(routes);
+    });
 
     // Inicia o servidor
     await fastify.listen({ port: config.PORT, host: "0.0.0.0" });
