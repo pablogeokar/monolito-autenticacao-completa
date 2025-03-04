@@ -5,6 +5,7 @@ import { type EnvConfig, fastifyEnvOptions } from "./config/env.config";
 import { getCorsOptions } from "./config/cors.config";
 import prismaPlugin from "./plugins/prisma";
 import { registerRoutes } from "./utils/register-routes";
+import { printRoutes } from "./utils/print-routes";
 
 const start = async () => {
   try {
@@ -35,11 +36,9 @@ const start = async () => {
     // Registra todas as rotas automaticamente
     await registerRoutes(fastify);
 
-    // Exibe todas as rotas registradas
+    // Exibe todas as rotas registradas formatadas
     fastify.ready(() => {
-      console.log("\nRotas registradas:");
-      const routes = fastify.printRoutes();
-      console.log(routes);
+      printRoutes();
     });
 
     // Inicia o servidor
