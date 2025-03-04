@@ -4,6 +4,7 @@ import cors from "@fastify/cors";
 import { type EnvConfig, fastifyEnvOptions } from "./config/env.config";
 import { getCorsOptions } from "./config/cors.config";
 import prismaPlugin from "./plugins/prisma";
+import { userRoutes } from "./modules/user/user.routes";
 
 const start = async () => {
   try {
@@ -35,6 +36,9 @@ const start = async () => {
     fastify.get("/", async () => {
       return { hello: "world" };
     });
+
+    // Registra as rotas de usuário
+    await fastify.register(userRoutes);
 
     // Inicia o servidor
     await fastify.listen({ port: config.PORT, host: "0.0.0.0" });
