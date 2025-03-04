@@ -19,6 +19,9 @@ export const fastifyEnvOptions = {
       CORS_ALLOWED_ORIGINS: {
         type: "string",
       },
+      DATABASE_URL: {
+        type: "string",
+      },
     },
   },
   dotenv: {
@@ -31,4 +34,5 @@ export type EnvConfig = {
   PORT: number;
   NODE_ENV: "development" | "production" | "test";
   CORS_ALLOWED_ORIGINS?: string;
+  DATABASE_URL: string;
 };

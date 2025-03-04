@@ -8,7 +8,10 @@
   "description": "API base utilizando o fastify com prisma orm orientada a modulos",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "NODE_ENV=development tsx watch src/index.ts",
+    "build": "prisma generate && prisma migrate deploy",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
   },
   "keywords": [
     "fastify",
@@ -19,17 +22,25 @@
   "dependencies": {
     "@fastify/cors": "^11.0.0",
     "@fastify/env": "^5.0.2",
+    "@prisma/client": "^6.4.1",
     "fastify": "^5.2.1",
+    "fastify-plugin": "^5.0.1",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/node": "^22.13.8",
+    "prisma": "^6.4.1",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "pnpm": {
     "ignoredBuiltDependencies": [
       "esbuild"
+    ],
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma"
     ]
   }
 }

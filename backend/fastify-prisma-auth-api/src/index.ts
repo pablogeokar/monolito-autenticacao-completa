@@ -3,6 +3,7 @@ import fastifyEnv from "@fastify/env";
 import cors from "@fastify/cors";
 import { type EnvConfig, fastifyEnvOptions } from "./config/env.config";
 import { getCorsOptions } from "./config/cors.config";
+import prismaPlugin from "./plugins/prisma";
 
 const start = async () => {
   try {
@@ -12,6 +13,9 @@ const start = async () => {
 
     // Registra o plugin @fastify/env com nossas configurações
     await fastify.register(fastifyEnv, fastifyEnvOptions);
+
+    // registra o prisma como plugin, visando o correto gerenciamento das instâncias do prisma
+    await fastify.register(prismaPlugin);
 
     // Usa a tipagem para garantir acesso seguro aos valores
     const config = fastify.config as EnvConfig;
