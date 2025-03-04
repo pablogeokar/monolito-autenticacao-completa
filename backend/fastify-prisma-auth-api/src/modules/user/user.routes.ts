@@ -7,4 +7,10 @@ export default async function userRoutes(fastify: FastifyInstance) {
     const user = await userController.getUserById(id);
     return user || reply.status(404).send({ message: "User not found" });
   });
+
+  fastify.post("/:id", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const user = await userController.getUserById(id);
+    return user || reply.status(404).send({ message: "User not found" });
+  });
 }

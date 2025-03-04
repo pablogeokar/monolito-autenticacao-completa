@@ -10,7 +10,24 @@ import { printRoutes } from "./utils/print-routes";
 const start = async () => {
   try {
     const fastify = Fastify({
-      logger: true,
+      //logger: true,
+      logger: {
+        level: "info", // Níveis: fatal, error, warn, info, debug, trace
+        timestamp: true, // Adiciona timestamp
+        formatters: {
+          level: (label) => {
+            return { level: label.toUpperCase() };
+          },
+        },
+        transport: {
+          target: "pino-pretty", // Torna os logs mais legíveis
+          options: {
+            colorize: true, // Adiciona cores
+            translateTime: "SYS:standard", // Formata o timestamp
+            ignore: "pid,hostname,reqId", // Ignora campos específicos
+          },
+        },
+      },
     });
 
     // Registra o plugin @fastify/env com nossas configurações
@@ -44,7 +61,8 @@ const start = async () => {
     // Inicia o servidor
     await fastify.listen({ port: config.PORT, host: "0.0.0.0" });
     console.log(
-      `🚀 Servidor rodando na porta ${config.PORT} em modo ${config.NODE_ENV}`
+      `🚀 Servidor rodando na porta ${config.PORT} em modo ${config.NODE_ENV}`,
+      "\n======================================================="
     );
   } catch (err) {
     console.error(err);

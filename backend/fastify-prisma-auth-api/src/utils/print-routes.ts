@@ -14,7 +14,7 @@ export async function printRoutes() {
   });
 
   console.log("\n📋 Rotas registradas:");
-  console.log("====================");
+  console.log("=======================================================");
 
   // Para cada arquivo de rotas, extrai e exibe as rotas
   for (const routeFile of routeFiles) {
@@ -82,5 +82,5 @@ export async function printRoutes() {
     }
   }
 
-  console.log("\n====================");
+  console.log("=======================================================");
 }
