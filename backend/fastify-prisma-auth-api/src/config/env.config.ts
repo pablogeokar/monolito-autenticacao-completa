@@ -5,7 +5,7 @@ export const fastifyEnvOptions = {
   confKey: "config",
   schema: {
     type: "object",
-    required: ["PORT", "NODE_ENV"],
+    required: ["PORT", "NODE_ENV", "DATABASE_URL"],
     properties: {
       PORT: {
         type: "number",
