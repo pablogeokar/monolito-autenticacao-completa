@@ -1,6 +1,14 @@
 import { fastify } from "fastify";
 import { fastifyEnv } from "@fastify/env";
 import { fastifyCors } from "@fastify/cors";
+import { fastifySwagger } from "@fastify/swagger";
+import {
+  validatorCompiler,
+  serializerCompiler,
+  type ZodTypeProvider,
+  jsonSchemaTransform,
+} from "fastify-type-provider-zod";
+import { fastifySwaggerUi } from "@fastify/swagger-ui";
 import { type EnvConfig, fastifyEnvOptions } from "./config/env.config";
 import { getCorsOptions } from "./config/cors.config";
 import prismaPlugin from "./plugins/prisma";
@@ -28,7 +36,10 @@ const start = async () => {
           },
         },
       },
-    });
+    }).withTypeProvider<ZodTypeProvider>();
+
+    app.setValidatorCompiler(validatorCompiler);
+    app.setSerializerCompiler(serializerCompiler);
 
     // Registra o plugin @fastify/env com nossas configurações
     await app.register(fastifyEnv, fastifyEnvOptions);
@@ -49,6 +60,20 @@ const start = async () => {
     if (config.NODE_ENV !== "development") {
       app.log.level = "warn";
     }
+
+    app.register(fastifySwagger, {
+      openapi: {
+        info: {
+          title: "API Docs",
+          version: "1.0.0",
+        },
+      },
+      transform: jsonSchemaTransform,
+    });
+
+    app.register(fastifySwaggerUi, {
+      routePrefix: "/docs",
+    });
 
     // Registra todas as rotas automaticamente
     await registerRoutes(app);
