@@ -1,6 +1,6 @@
-import Fastify from "fastify";
-import fastifyEnv from "@fastify/env";
-import cors from "@fastify/cors";
+import { fastify } from "fastify";
+import { fastifyEnv } from "@fastify/env";
+import { fastifyCors } from "@fastify/cors";
 import { type EnvConfig, fastifyEnvOptions } from "./config/env.config";
 import { getCorsOptions } from "./config/cors.config";
 import prismaPlugin from "./plugins/prisma";
@@ -9,7 +9,7 @@ import { printRoutes } from "./utils/print-routes";
 
 const start = async () => {
   try {
-    const fastify = Fastify({
+    const app = fastify({
       //logger: true,
       logger: {
         level: "info", // Níveis: fatal, error, warn, info, debug, trace
@@ -31,35 +31,35 @@ const start = async () => {
     });
 
     // Registra o plugin @fastify/env com nossas configurações
-    await fastify.register(fastifyEnv, fastifyEnvOptions);
+    await app.register(fastifyEnv, fastifyEnvOptions);
 
     // registra o prisma como plugin, visando o correto gerenciamento das instâncias do prisma
-    await fastify.register(prismaPlugin);
+    await app.register(prismaPlugin);
 
     // Usa a tipagem para garantir acesso seguro aos valores
-    const config = fastify.config as EnvConfig;
+    const config = app.config as EnvConfig;
 
     // Obtém as opções do CORS baseadas na configuração
     const corsOptions = getCorsOptions(config);
 
     // Registra o plugin de CORS com as opções definidas no arquivo de configuração
-    await fastify.register(cors, corsOptions);
+    await app.register(fastifyCors, corsOptions);
 
     // Ajusta o logger baseado no ambiente
     if (config.NODE_ENV !== "development") {
-      fastify.log.level = "warn";
+      app.log.level = "warn";
     }
 
     // Registra todas as rotas automaticamente
-    await registerRoutes(fastify);
+    await registerRoutes(app);
 
     // Exibe todas as rotas registradas formatadas
-    fastify.ready(() => {
+    app.ready(() => {
       printRoutes();
     });
 
     // Inicia o servidor
-    await fastify.listen({ port: config.PORT, host: "0.0.0.0" });
+    await app.listen({ port: config.PORT, host: "0.0.0.0" });
     console.log(
       `🚀 Servidor rodando na porta ${config.PORT} em modo ${config.NODE_ENV}`,
       "\n======================================================="

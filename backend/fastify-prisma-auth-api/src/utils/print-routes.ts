@@ -26,9 +26,9 @@ export async function printRoutes() {
       const fileContent = fs.readFileSync(routeFile, "utf-8");
 
       // Extrai todas as definições de rotas usando regex
-      // Procura por padrões como: fastify.get("...", ...), fastify.post("...", ...), etc.
+      // Procura por padrões como: app.get("...", ...), app.post("...", ...), etc.
       const routeRegex =
-        /fastify\.(get|post|put|delete|patch|options|head)\s*\(\s*["'`]([^"'`]+)["'`]/g;
+        /app\.(get|post|put|delete|patch|options|head)\s*\(\s*["'`]([^"'`]+)["'`]/g;
 
       // Define o tipo para match
       let match: RegExpExecArray | null;

@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
 
-export default async function userRoutes(fastify: FastifyInstance) {
-  fastify.get("/", async (request, reply) => {
-    return reply.send({ message: "Rota Teste" });
+export default async function routes(app: FastifyInstance) {
+  app.get("/", async (req, res) => {
+    return res.send({ message: "Rota Teste" });
   });
 }
