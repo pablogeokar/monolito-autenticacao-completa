@@ -1,8 +1,8 @@
 import { prisma } from "../../lib/prisma";
+import type { CreateDto } from "./user.schema";
 
 export class UserService {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  public async create(user: any) {
+  public async create(user: CreateDto) {
     return await prisma.user.create({
       data: {
         name: user.name,
@@ -15,6 +15,7 @@ export class UserService {
   public async getAll() {
     return await prisma.user.findMany();
   }
+
   public async getById(userId: string) {
     return await prisma.user.findFirst({
       where: {
