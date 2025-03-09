@@ -9,10 +9,18 @@ export const Schema = z.object({
 });
 
 // Schema para criação de usuário (sem ID, que será gerado)
-export const createSchema = Schema.omit({ id: true });
+export const createSchema = Schema.omit({
+  id: true,
+});
 
 // Schema para resposta de usuário (pode ser diferente do modelo interno)
-export const responseSchema = Schema;
+export const responseSchema = z.object({
+  id: z.string().describe("ID único do usuário"),
+  name: z.string().describe("Nome completo do usuário"),
+  email: z.string().describe("Email válido do usuário"),
+  createdAt: z.date().describe("Data da criação"),
+  updatedAt: z.date().describe("Data da última atualização"),
+});
 
 // Schema para listagem de usuários
 export const ListSchema = z.array(responseSchema);

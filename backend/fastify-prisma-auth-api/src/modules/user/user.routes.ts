@@ -18,7 +18,6 @@ export default async function routes(app: FastifyTypedInstance) {
         tags: ["users"],
         response: {
           200: ListSchema.describe("Lista de usuários"),
-          404: errorResponseSchema.describe("Usuários não encontrados"),
         },
       },
     },
@@ -68,8 +67,9 @@ export default async function routes(app: FastifyTypedInstance) {
     async (req, res) => {
       const userData = req.body as CreateDto;
       const user = await userService.create(userData);
-      if (!user)
+      if (!user) {
         return res.status(404).send({ message: "Erro ao criar usuário" });
+      }
       return res.status(201).send(user);
     }
   );
