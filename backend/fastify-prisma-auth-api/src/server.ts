@@ -13,54 +13,44 @@ import { type EnvConfig, fastifyEnvOptions } from "./config/env.config";
 import { getCorsOptions } from "./config/cors.config";
 import { registerRoutes } from "./utils/register-routes";
 import { printRoutes } from "./utils/print-routes";
-import prismaPlugin from "./plugins/prisma";
+import { prismaPlugin } from "./modules/prisma/prisma.plugin";
 import prismaErrorHandler from "./lib/prismaErrorHandler";
+
+const createLogger = () => {
+  return {
+    level: "info",
+    timestamp: true,
+    formatters: {
+      level: (label: string) => ({ level: label.toUpperCase() }),
+    },
+    transport: {
+      target: "pino-pretty",
+      options: {
+        colorize: true,
+        translateTime: "SYS:standard",
+        ignore: "pid,hostname,reqId",
+      },
+    },
+  };
+};
 
 const start = async () => {
   try {
     const app = fastify({
-      //logger: true,
-      logger: {
-        level: "info", // Níveis: fatal, error, warn, info, debug, trace
-        timestamp: true, // Adiciona timestamp
-        formatters: {
-          level: (label) => {
-            return { level: label.toUpperCase() };
-          },
-        },
-        transport: {
-          target: "pino-pretty", // Torna os logs mais legíveis
-          options: {
-            colorize: true, // Adiciona cores
-            translateTime: "SYS:standard", // Formata o timestamp
-            ignore: "pid,hostname,reqId", // Ignora campos específicos
-          },
-        },
-      },
+      logger: createLogger(),
     }).withTypeProvider<ZodTypeProvider>();
 
     app.setValidatorCompiler(validatorCompiler);
     app.setSerializerCompiler(serializerCompiler);
 
-    // Registra o plugin @fastify/env com nossas configurações
     await app.register(fastifyEnv, fastifyEnvOptions);
-
-    // registra o prisma como plugin, visando o correto gerenciamento das instâncias do prisma
     await app.register(prismaPlugin);
-
-    // Registra o handler de erros do Prisma
     await app.register(prismaErrorHandler);
 
-    // Usa a tipagem para garantir acesso seguro aos valores
     const config = app.config as EnvConfig;
-
-    // Obtém as opções do CORS baseadas na configuração
     const corsOptions = getCorsOptions(config);
-
-    // Registra o plugin de CORS com as opções definidas no arquivo de configuração
     await app.register(fastifyCors, corsOptions);
 
-    // Ajusta o logger baseado no ambiente
     if (config.NODE_ENV !== "development") {
       app.log.level = "debug";
     }
@@ -79,22 +69,18 @@ const start = async () => {
       routePrefix: "/docs",
     });
 
-    // Registra todas as rotas automaticamente
     await registerRoutes(app);
 
-    // Exibe todas as rotas registradas formatadas
     app.ready(() => {
       printRoutes();
     });
 
-    // Inicia o servidor
     await app.listen({ port: config.PORT, host: "0.0.0.0" });
     console.log(
-      `🚀 Servidor rodando na porta ${config.PORT} em modo ${config.NODE_ENV}`,
-      "\n======================================================="
+      `🚀 Servidor rodando na porta ${config.PORT} em modo ${config.NODE_ENV}`
     );
   } catch (err) {
-    console.error(err);
+    console.error("Erro ao iniciar o servidor:", err);
     process.exit(1);
   }
 };

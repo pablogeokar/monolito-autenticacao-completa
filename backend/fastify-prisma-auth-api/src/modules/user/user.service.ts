@@ -1,9 +1,9 @@
-import { prisma } from "../../lib/prisma";
+import { prismaService } from "../prisma/prisma.module";
 import type { CreateDto } from "./user.schema";
 
 export class UserService {
   public async create(user: CreateDto) {
-    return await prisma.user.create({
+    return await prismaService.user.create({
       data: {
         name: user.name,
         email: user.email,
@@ -13,11 +13,11 @@ export class UserService {
   }
 
   public async getAll() {
-    return await prisma.user.findMany();
+    return await prismaService.user.findMany();
   }
 
   public async getById(userId: string) {
-    return await prisma.user.findFirst({
+    return await prismaService.user.findFirst({
       where: {
         id: userId,
       },
