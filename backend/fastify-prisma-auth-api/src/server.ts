@@ -11,9 +11,10 @@ import {
 import { fastifySwaggerUi } from "@fastify/swagger-ui";
 import { type EnvConfig, fastifyEnvOptions } from "./config/env.config";
 import { getCorsOptions } from "./config/cors.config";
-import prismaPlugin from "./plugins/prisma";
 import { registerRoutes } from "./utils/register-routes";
 import { printRoutes } from "./utils/print-routes";
+import prismaPlugin from "./plugins/prisma";
+import prismaErrorHandler from "./lib/prismaErrorHandler";
 
 const start = async () => {
   try {
@@ -47,6 +48,9 @@ const start = async () => {
     // registra o prisma como plugin, visando o correto gerenciamento das instâncias do prisma
     await app.register(prismaPlugin);
 
+    // Registra o handler de erros do Prisma
+    await app.register(prismaErrorHandler);
+
     // Usa a tipagem para garantir acesso seguro aos valores
     const config = app.config as EnvConfig;
 
@@ -58,7 +62,7 @@ const start = async () => {
 
     // Ajusta o logger baseado no ambiente
     if (config.NODE_ENV !== "development") {
-      app.log.level = "warn";
+      app.log.level = "debug";
     }
 
     app.register(fastifySwagger, {
