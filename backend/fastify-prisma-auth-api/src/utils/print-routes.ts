@@ -55,16 +55,16 @@ export async function printRoutes() {
           let methodFormatted: string;
           switch (route.method) {
             case "GET":
-              methodFormatted = "\x1b[32mGET\x1b[0m"; // Verde
+              methodFormatted = "\x1b[46;97mGET\x1b[0m"; // Cyan
               break;
             case "POST":
-              methodFormatted = "\x1b[33mPOST\x1b[0m"; // Amarelo
+              methodFormatted = "\x1b[42;97mPOST\x1b[0m"; // Verde
               break;
             case "PUT":
-              methodFormatted = "\x1b[34mPUT\x1b[0m"; // Azul
+              methodFormatted = "\x1b[43;97mPUT\x1b[0m"; // Amarelo
               break;
             case "DELETE":
-              methodFormatted = "\x1b[31mDELETE\x1b[0m"; // Vermelho
+              methodFormatted = "\x1b[41;97mDELETE\x1b[0m"; // Vermelho
               break;
             case "PATCH":
               methodFormatted = "\x1b[35mPATCH\x1b[0m"; // Magenta

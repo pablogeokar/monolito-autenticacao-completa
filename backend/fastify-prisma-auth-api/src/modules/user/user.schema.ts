@@ -10,11 +10,11 @@ const nameSchema = z
 const emailSchema = z.string().email().describe("Email válido do usuário");
 const passwordSchema = z
   .string()
-  .min(8)
-  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
-    message:
-      "A senha deve conter pelo menos 8 caracteres, incluindo maiúsculas, minúsculas, números e caracteres especiais",
-  })
+  .min(6)
+  // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
+  //   message:
+  //     "A senha deve conter pelo menos 8 caracteres, incluindo maiúsculas, minúsculas, números e caracteres especiais",
+  // })
   .describe("Senha do usuário");
 const tokenVersionSchema = z
   .number()

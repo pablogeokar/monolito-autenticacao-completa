@@ -14,6 +14,7 @@ import { getCorsOptions } from "./config/cors.config";
 import { registerRoutes } from "./utils/register-routes";
 import { printRoutes } from "./utils/print-routes";
 import { prismaPlugin } from "./modules/prisma/prisma.plugin";
+import { authPlugin } from "./modules/auth/auth.plugin";
 import prismaErrorHandler from "./lib/prismaErrorHandler";
 
 const createLogger = () => {
@@ -69,6 +70,7 @@ const start = async () => {
       routePrefix: "/docs",
     });
 
+    await app.register(authPlugin);
     await registerRoutes(app);
 
     app.ready(() => {

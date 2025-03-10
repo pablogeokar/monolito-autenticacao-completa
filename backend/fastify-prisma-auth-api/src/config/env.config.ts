@@ -5,7 +5,13 @@ export const fastifyEnvOptions = {
   confKey: "config",
   schema: {
     type: "object",
-    required: ["PORT", "NODE_ENV", "DATABASE_URL"],
+    required: [
+      "PORT",
+      "NODE_ENV",
+      "DATABASE_URL",
+      "JWT_SECRET",
+      "COOKIE_SECRET",
+    ],
     properties: {
       PORT: {
         type: "number",
@@ -22,6 +28,8 @@ export const fastifyEnvOptions = {
       DATABASE_URL: {
         type: "string",
       },
+      JWT_SECRET: { type: "string" },
+      COOKIE_SECRET: { type: "string" },
     },
   },
   dotenv: {
@@ -35,4 +43,6 @@ export type EnvConfig = {
   NODE_ENV: "development" | "production" | "test";
   CORS_ALLOWED_ORIGINS?: string;
   DATABASE_URL: string;
+  JWT_SECRET: string;
+  COOKIE_SECRET: string;
 };
